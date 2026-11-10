@@ -1,0 +1,334 @@
+{
+  "baseOcc": 85,
+  "adminPinHash": "14aec96b16f0343c54b94eadf67a95806ee719132be7531a99c1128f1a544a60",
+  "assumptions": {
+    "infl": 5,
+    "horizon": 10
+  },
+  "scenarios": [
+    {
+      "id": "cons",
+      "name": "Conservador",
+      "occ": 70,
+      "plus": 5
+    },
+    {
+      "id": "base",
+      "name": "Base",
+      "occ": 85,
+      "plus": 7
+    },
+    {
+      "id": "opt",
+      "name": "Optimista",
+      "occ": 95,
+      "plus": 9
+    }
+  ],
+  "benchmarks": [
+    {
+      "name": "S&P 500 / Bolsa",
+      "rate": 10,
+      "nivel": "Riesgo alto",
+      "texto": "Alta volatilidad. No tienes un activo físico que respalde tu dinero si el mercado cae drásticamente."
+    },
+    {
+      "name": "CETES / Banco",
+      "rate": 11,
+      "nivel": "Riesgo de caída de tasas",
+      "texto": "El 11% no es sostenible a largo plazo. Tu capital no genera plusvalía y dependes de decisiones bancarias, sin respaldo de un activo físico."
+    },
+    {
+      "name": "Fractional turístico",
+      "rate": 8,
+      "nivel": "Riesgo operativo",
+      "texto": "Rendimiento volátil sujeto a turismo, competencia de Airbnb y alto desgaste estético. Midstorage es industria B2B de largo plazo."
+    }
+  ],
+  "contacto": {
+    "whatsapp": ""
+  },
+  "ownRisk": {
+    "nivel": "Bajo riesgo",
+    "texto": "Tu capital está respaldado por ladrillos industriales (bodegas) con ocupación empresarial de largo plazo (B2B)."
+  },
+  "inventory": {
+    "Avenida Internacional": {
+      "total": 85,
+      "vendidas": 59
+    }
+  },
+  "products": [
+    {
+      "id": "holding",
+      "dev": "Holding",
+      "tipo": "Fraccional B2B",
+      "inicioRenta": 1,
+      "name": "Fracción",
+      "vp": 600000,
+      "vf": 850000,
+      "rate": 7.5,
+      "entrega": "2017-12-30"
+    },
+    {
+      "id": "one",
+      "dev": "One Storage",
+      "tipo": "Fraccional B2B",
+      "inicioRenta": 1,
+      "name": "Fracción",
+      "vp": 475000,
+      "vf": 655000,
+      "rate": 7.5,
+      "entrega": "2027-12-30"
+    },
+    {
+      "id": "avA",
+      "dev": "Avenida Internacional",
+      "tipo": "Tradicional",
+      "inicioRenta": 3,
+      "name": "Bodega A · 170 m²",
+      "vp": 2890000,
+      "vf": 3912615,
+      "rate": 7,
+      "entrega": "2026-12-30"
+    },
+    {
+      "id": "avB",
+      "dev": "Avenida Internacional",
+      "tipo": "Tradicional",
+      "inicioRenta": 3,
+      "name": "Bodega B · 200 m²",
+      "vp": 3500000,
+      "vf": 4738462,
+      "rate": 7,
+      "entrega": "2026-12-30"
+    },
+    {
+      "id": "avC",
+      "dev": "Avenida Internacional",
+      "tipo": "Tradicional",
+      "inicioRenta": 3,
+      "name": "Bodega C · 520 m²",
+      "vp": 9152000,
+      "vf": 12390400,
+      "rate": 7,
+      "entrega": "2027-12-30"
+    },
+    {
+      "id": "prA",
+      "dev": "Progreso Hub",
+      "tipo": "Tradicional",
+      "inicioRenta": 3,
+      "name": "Bodega A · 474.26 m²",
+      "vp": 10773453,
+      "vf": 14585598,
+      "rate": 7,
+      "entrega": "2029-09-30"
+    },
+    {
+      "id": "prB",
+      "dev": "Progreso Hub",
+      "tipo": "Tradicional",
+      "inicioRenta": 3,
+      "name": "Bodega B · 185.89 m²",
+      "vp": 3404000,
+      "vf": 4608492,
+      "rate": 7,
+      "entrega": "2029-09-30"
+    },
+    {
+      "id": "prC",
+      "dev": "Progreso Hub",
+      "tipo": "Tradicional",
+      "inicioRenta": 3,
+      "name": "Bodega C · 182-188 m²",
+      "vp": 3800000,
+      "vf": 5144615,
+      "rate": 7,
+      "entrega": "2029-09-30"
+    },
+    {
+      "id": "prD",
+      "dev": "Progreso Hub",
+      "tipo": "Tradicional",
+      "inicioRenta": 3,
+      "name": "Bodega D · 172.9 m²",
+      "vp": 3256000,
+      "vf": 4408123,
+      "rate": 7,
+      "entrega": "2029-09-30"
+    },
+    {
+      "id": "teS",
+      "dev": "Teya",
+      "tipo": "Tradicional",
+      "inicioRenta": 3,
+      "name": "Teya S · 250 m²",
+      "vp": 5250000,
+      "vf": 7287500,
+      "rate": 7,
+      "entrega": "2028-12-30"
+    },
+    {
+      "id": "teB",
+      "dev": "Teya",
+      "tipo": "Tradicional",
+      "inicioRenta": 3,
+      "name": "Teya B · 250 m²",
+      "vp": 4875000,
+      "vf": 6600000,
+      "rate": 7,
+      "entrega": "2028-12-30"
+    },
+    {
+      "id": "mp3",
+      "dev": "MidPoint Corporate Hub",
+      "tipo": "Oficina corporativa",
+      "inicioRenta": 3,
+      "name": "Piso 3",
+      "vp": 1539200,
+      "vf": 2076707,
+      "rate": 7,
+      "entrega": "2029-06-30"
+    },
+    {
+      "id": "mp4",
+      "dev": "MidPoint Corporate Hub",
+      "tipo": "Oficina corporativa",
+      "inicioRenta": 3,
+      "name": "Piso 4",
+      "vp": 1585376,
+      "vf": 2136310,
+      "rate": 7,
+      "entrega": "2029-06-30"
+    },
+    {
+      "id": "mp5",
+      "dev": "MidPoint Corporate Hub",
+      "tipo": "Oficina corporativa",
+      "inicioRenta": 3,
+      "name": "Piso 5",
+      "vp": 1631552,
+      "vf": 2201309,
+      "rate": 7,
+      "entrega": "2029-06-30"
+    },
+    {
+      "id": "mp6",
+      "dev": "MidPoint Corporate Hub",
+      "tipo": "Oficina corporativa",
+      "inicioRenta": 3,
+      "name": "Piso 6",
+      "vp": 1677728,
+      "vf": 2263611,
+      "rate": 7,
+      "entrega": "2029-06-30"
+    },
+    {
+      "id": "mp7",
+      "dev": "MidPoint Corporate Hub",
+      "tipo": "Oficina corporativa",
+      "inicioRenta": 3,
+      "name": "Piso 7",
+      "vp": 1723904,
+      "vf": 2325912,
+      "rate": 7,
+      "entrega": "2029-06-30"
+    },
+    {
+      "id": "mp8",
+      "dev": "MidPoint Corporate Hub",
+      "tipo": "Oficina corporativa",
+      "inicioRenta": 3,
+      "name": "Piso 8",
+      "vp": 1770080,
+      "vf": 2342286,
+      "rate": 7,
+      "entrega": "2029-06-30"
+    }
+  ],
+  "plans": [
+    {
+      "id": "contado",
+      "name": "Contado",
+      "tipo": "contado",
+      "apartado": 10000,
+      "eng": 100,
+      "ce": 0,
+      "ceFijo": 0,
+      "n": 0
+    },
+    {
+      "id": "m14",
+      "name": "14 meses",
+      "tipo": "mensual",
+      "apartado": 5000,
+      "eng": 30,
+      "ce": 30,
+      "ceFijo": 0,
+      "n": 14
+    },
+    {
+      "id": "m24",
+      "name": "24 meses",
+      "tipo": "mensual",
+      "apartado": 5000,
+      "eng": 30,
+      "ce": 30,
+      "ceFijo": 0,
+      "n": 24
+    },
+    {
+      "id": "m34",
+      "name": "34 meses",
+      "tipo": "mensual",
+      "apartado": 5000,
+      "eng": 30,
+      "ce": 0,
+      "ceFijo": 100000,
+      "n": 34
+    },
+    {
+      "id": "t5",
+      "name": "Trimestral",
+      "tipo": "trimestral",
+      "apartado": 5000,
+      "eng": 30,
+      "ce": 30,
+      "ceFijo": 0,
+      "n": 5
+    }
+  ],
+  "fundamentals": {
+    "holding": {
+      "label": "Holding",
+      "tipo": "m2",
+      "lineas": [
+        {
+          "concepto": "Bodegas Progreso",
+          "renta": 168,
+          "m2": 5112
+        },
+        {
+          "concepto": "Bodegas Av. Internacional",
+          "renta": 154,
+          "m2": 4160
+        }
+      ],
+      "gastos": 15,
+      "fracciones": 356,
+      "precio": 600000,
+      "iva": 1.16
+    },
+    "one": {
+      "label": "One Storage",
+      "tipo": "bodegas",
+      "bodegas": 177,
+      "renta": 4500,
+      "gastos": 30,
+      "fracciones": 200,
+      "precio": 475000,
+      "iva": 1.16
+    }
+  }
+}
