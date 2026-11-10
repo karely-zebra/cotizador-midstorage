@@ -505,10 +505,11 @@ function renderProducts(){
   $('devChips').innerHTML=D.map(dv=>`<button class="chip ${S.dev===dv?'on':''}" data-dev="${esc(dv)}">${esc(dv)}${cnt(dv)?`<span class="dot">${cnt(dv)}</span>`:''}</button>`).join('');
   const ps=CFG.products.filter(p=>p.dev===S.dev);
   if(!ps.length){$('prodList').innerHTML='';return}
+  const FR=frecuencia(CFG.products.filter(x=>S.qty[x.id])).freq;
   const ent=parseD(ps[0].entrega), inv=(CFG.inventory||{})[S.dev];
   const quedan=inv&&inv.total>0?Math.max(0,inv.total-(inv.vendidas||0)):null;
   $('prodList').innerHTML=`<div class="devhead"><span class="note">${esc(ps[0].tipo||'')}${ps[0].tipo?' · ':''}${monthsUntil(ent)>0?'Entrega '+MES[ent.getMonth()]+' '+ent.getFullYear():'Ya entregado · genera rentas'}</span>${quedan!==null?`<span class="stock">Quedan ${quedan} de ${inv.total}</span>`:''}</div>`+
-    ps.map(p=>{const q=S.qty[p.id]||0;return `<div class="prod"><div class="n"><b>${esc(p.name)}</b><small>${M(p.vp)} · ${p.rate??7.5}% anual<br>Renta: ${M(p.vp*(p.rate??7.5)/1200)}/mes · ${M(p.vp*(p.rate??7.5)/400)}/trim · ${M(p.vp*(p.rate??7.5)/100)}/año</small></div>
+    ps.map(p=>{const q=S.qty[p.id]||0;return `<div class="prod"><div class="n"><b>${esc(p.name)}</b><small>${M(p.vp)} · ${p.rate??7.5}% anual<br>Renta: ${FR==='mensual'?M(p.vp*(p.rate??7.5)/1200)+'/mes':M(p.vp*(p.rate??7.5)/400)+'/trimestre'} · ${M(p.vp*(p.rate??7.5)/100)}/año</small></div>
       <div class="qty"><button data-q="${esc(p.id)}" data-d="-1" aria-label="Quitar">−</button><span>${q}</span><button data-q="${esc(p.id)}" data-d="1" aria-label="Agregar">+</button></div></div>`}).join('');
   const sel=CFG.products.filter(p=>S.qty[p.id]);
   $('selLine').innerHTML=sel.length?'En la propuesta: '+sel.map(p=>`<b>${S.qty[p.id]>1?S.qty[p.id]+'× ':''}${esc(pname(p))}</b>`).join(', '):'';
@@ -624,15 +625,16 @@ function frecuencia(sel){
 }
 function renderPayout(R){
   if(!R.units){$('payout').innerHTML='<p class="note">Agrega al menos una unidad.</p>';return}
-  const {acc,um,freq}=frecuencia(R.sel), on=k=>k===freq?' style="color:var(--gain);font-weight:800"':'';
-  const row=(n,a,extra='')=>`<tr><td class="l">${n}${extra}</td><td${on('mensual')}>${M(a/12)}</td><td${on('trimestral')}>${M(a/4)}</td><td>${M(a)}</td></tr>`;
+  const {acc,um,freq}=frecuencia(R.sel), mens=freq==='mensual';
+  const lbl=mens?'Mensual':'Trimestral', per=a=>mens?a/12:a/4;
+  const row=(n,a,cls='')=>`<tr class="${cls}"><td class="l">${n}</td><td style="color:var(--gain);font-weight:800">${M(per(a))}</td><td>${M(a)}</td></tr>`;
   const tot=R.sel.reduce((a,p)=>a+rentaAnual(p)*S.qty[p.id],0);
   const ini=R.sel.some(p=>inicio(p)>1)?`<p class="note">Bodegas y pisos tradicionales: la renta inicia al liquidar (año ${Math.max(...R.sel.map(inicio))}).</p>`:'';
-  $('payout').innerHTML=`<div class="tw"><table class="t"><thead><tr><th>Producto</th><th>Mensual</th><th>Trimestral</th><th>Anual</th></tr></thead><tbody>`+
-    R.sel.map(p=>row(`${S.qty[p.id]>1?S.qty[p.id]+'× ':''}${esc(pname(p))}`,rentaAnual(p)*S.qty[p.id],` <span class="note">${p.rate??7.5}%</span>`)).join('')+
-    (R.sel.length>1?`<tr class="tot"><td>Total</td><td${on('mensual')}>${M(tot/12)}</td><td${on('trimestral')}>${M(tot/4)}</td><td>${M(tot)}</td></tr>`:'')+
-    `</tbody></table></div><p style="margin:12px 0 0;font-weight:700">${acc?`Con ${acc} ${acc===1?'acción':'acciones'} recibes tu renta cada <span style="color:var(--gain)">${freq==='mensual'?'mes':'trimestre'}</span>.`:'Recibes tu renta cada <span style="color:var(--gain)">mes</span>.'}</p>
-    <p class="note" style="margin-top:4px">De 1 a ${um-1} acciones el pago es trimestral; desde ${um} acciones es mensual.</p>${ini}`;
+  $('payout').innerHTML=`<div class="tw"><table class="t"><thead><tr><th>Producto</th><th>Pago ${lbl.toLowerCase()}</th><th>Anual</th></tr></thead><tbody>`+
+    R.sel.map(p=>row(`${S.qty[p.id]>1?S.qty[p.id]+'× ':''}${esc(pname(p))} <span class="note">${p.rate??7.5}%</span>`,rentaAnual(p)*S.qty[p.id])).join('')+
+    (R.sel.length>1?row('Total',tot,'tot'):'')+
+    `</tbody></table></div><p style="margin:12px 0 0;font-weight:700">${acc?`Con ${acc} ${acc===1?'acción':'acciones'} recibes tu renta cada <span style="color:var(--gain)">${mens?'mes':'trimestre'}</span>.`:'Recibes tu renta cada <span style="color:var(--gain)">mes</span>.'}</p>
+    <p class="note" style="margin-top:4px">${mens?(acc?`Desde ${um} acciones el pago es mensual.`:''):`Con ${um} acciones o más el pago pasa a ser mensual.`}</p>${ini}`;
 }
 function renderCompare(R){
   $('cmpNote').textContent=R.units?`Inversión ${M(R.VP)}. El rendimiento es el mismo en todos los planes; solo cambia cómo se paga.`:'Selecciona productos en el Cotizador.';
@@ -743,10 +745,11 @@ async function makePDF(){
     d.setTextColor(...(b.me?gain:ink));d.text(M(b.v),X+CW,y+8,{align:'right'});y+=18});
   y+=16;
   d.setFont('helvetica','bold');d.setFontSize(10);d.setTextColor(...gold);d.text('ASÍ RECIBES TU RENDIMIENTO',X,y);y+=16;
-  d.setFontSize(8);d.setTextColor(...mut);d.text('MENSUAL',X+300,y,{align:'right'});d.text('TRIMESTRAL',X+400,y,{align:'right'});d.text('ANUAL',X+CW,y,{align:'right'});y+=14;
-  const prow=(n,a,b)=>{d.setFont('helvetica',b?'bold':'normal');d.setFontSize(9);d.setTextColor(...ink);d.text(d.splitTextToSize(n,240)[0],X,y);
-    [[a/12,'mensual',300],[a/4,'trimestral',400]].forEach(([v,k,dx])=>{d.setTextColor(...(FQ.freq===k?gain:ink));d.setFont('helvetica',FQ.freq===k||b?'bold':'normal');d.text(M(v),X+dx,y,{align:'right'})});
-    d.setTextColor(...ink);d.text(M(a),X+CW,y,{align:'right'});d.setDrawColor(232,230,225);d.line(X,y+6,X+CW,y+6);y+=18};
+  const mensP=FQ.freq==='mensual';
+  d.setFontSize(8);d.setTextColor(...mut);d.text(mensP?'PAGO MENSUAL':'PAGO TRIMESTRAL',X+400,y,{align:'right'});d.text('ANUAL',X+CW,y,{align:'right'});y+=14;
+  const prow=(n,a,b)=>{d.setFont('helvetica',b?'bold':'normal');d.setFontSize(9);d.setTextColor(...ink);d.text(d.splitTextToSize(n,300)[0],X,y);
+    d.setTextColor(...gain);d.setFont('helvetica','bold');d.text(M(mensP?a/12:a/4),X+400,y,{align:'right'});
+    d.setTextColor(...ink);d.setFont('helvetica',b?'bold':'normal');d.text(M(a),X+CW,y,{align:'right'});d.setDrawColor(232,230,225);d.line(X,y+6,X+CW,y+6);y+=18};
   R.sel.forEach(p=>prow(`${S.qty[p.id]>1?S.qty[p.id]+'× ':''}${pname(p)} (${p.rate??7.5}%)`,rentaAnual(p)*S.qty[p.id]));
   if(R.sel.length>1)prow('Total',R.rentaIni,true);
   d.setFont('helvetica','bold');d.setFontSize(9);d.setTextColor(...gain);
