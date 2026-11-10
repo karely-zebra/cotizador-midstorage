@@ -10,21 +10,24 @@
       "id": "cons",
       "name": "Conservador",
       "occ": 70,
-      "plus": 5
+      "plus": 10
     },
     {
       "id": "base",
       "name": "Base",
       "occ": 85,
-      "plus": 7
+      "plus": 10
     },
     {
       "id": "opt",
       "name": "Optimista",
       "occ": 95,
-      "plus": 9
+      "plus": 13
     }
   ],
+  "pagos": {
+    "umbralMensual": 4
+  },
   "benchmarks": [
     {
       "name": "S&P 500 / Bolsa",

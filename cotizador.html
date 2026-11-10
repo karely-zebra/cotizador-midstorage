@@ -150,7 +150,7 @@ body.clientlink .link-hide{display:none!important}
     <div class="brand"><svg width="22" height="24" viewBox="0 0 22 24" aria-hidden="true"><rect x="0" y="4" width="5" height="20" fill="currentColor"/><rect x="8" y="2" width="5" height="22" fill="currentColor"/><rect x="16" y="0" width="6" height="24" fill="currentColor"/></svg>MIDSTORAGE <em>Cotizador</em></div>
     <nav id="nav" class="link-hide">
       <button data-v="cot" class="on">Cotizador</button>
-      <button data-v="cmp">Comparar planes</button>
+      <button data-v="cmp" hidden>Comparar planes</button>
       <button data-v="cat">Catálogo</button>
       <button data-v="his">Historial</button>
       <button data-v="cfg" id="navCfg">Configuración</button>
@@ -183,7 +183,7 @@ body.clientlink .link-hide{display:none!important}
           <div class="sug" id="sug"></div>
         </details>
       </div>
-      <div class="card soft">
+      <div class="card soft" hidden>
         <h3 class="eb">2 · ¿Cómo paga?</h3>
         <div class="chips" id="planChips"></div>
         <div class="slider" id="s-meses"><div class="top"><span id="l-meses">Mensualidades</span><output id="o-meses"></output></div>
@@ -203,7 +203,7 @@ body.clientlink .link-hide{display:none!important}
         <div class="slider"><div class="top"><span>Ocupación</span><output id="o-occ"></output></div>
           <input type="range" id="occ" min="50" max="100" step="1" aria-label="Ocupación"></div>
         <div class="slider"><div class="top"><span>Plusvalía anual</span><output id="o-plus"></output></div>
-          <input type="range" id="plus" min="0" max="15" step="0.5" aria-label="Plusvalía anual"></div>
+          <input type="range" id="plus" min="10" max="13" step="0.5" aria-label="Plusvalía anual"></div>
         <div class="slider"><div class="top"><span>Inflación (crecimiento de rentas)</span><output id="o-infl"></output></div>
           <input type="range" id="infl" min="0" max="10" step="0.5" aria-label="Inflación"></div>
         <div style="margin-top:12px"><label class="f" for="horizon">Años de proyección</label><input type="number" id="horizon" min="1" max="30"></div>
@@ -235,22 +235,19 @@ body.clientlink .link-hide{display:none!important}
         <div class="bars" id="bench"></div>
       </div>
       <div class="card">
-        <div class="cardhead">
-          <h3 class="eb">¿De dónde sale el rendimiento?</h3>
-          <div class="chips" id="fundChips"></div>
-        </div>
-        <div id="fund"></div>
+        <h3 class="eb">Así recibes tu rendimiento</h3>
+        <div id="payout"></div>
       </div>
-      <div><button class="btn" id="btnDetail">Ver detalle: proyección y calendario de pagos ▾</button></div>
+      <div><button class="btn" id="btnDetail">Ver detalle: proyección año por año ▾</button></div>
       <div class="card" id="detail" hidden>
         <div class="tabs" id="subtabs">
           <button class="chip on" data-t="proj">Proyección año por año</button>
-          <button class="chip" data-t="pay">Calendario de pagos</button>
+          <button class="chip" data-t="pay" hidden>Calendario de pagos</button>
         </div>
         <div id="t-proj"><div class="tw"><table class="t" id="projTable"></table></div></div>
         <div id="t-pay" hidden><div class="tw"><table class="t" id="payTable"></table></div></div>
       </div>
-      <p class="note">Las cifras son proyecciones estimadas y pueden variar según las condiciones del mercado. Todos los cálculos se hacen sobre el precio de lista, sin bonos ni descuentos. Rentas con incremento de 5% anual y plusvalía operativa de 7% anual compuesto sobre el valor a la entrega. Los rendimientos de bolsa, CETES y fractional turístico son escenarios supuestos con tasa constante, no promesas. Las rentas de esquemas de renta garantizada inician al liquidar el 100% de la propiedad. Aplican términos y condiciones de compra.</p>
+      <p class="note">Las cifras son proyecciones estimadas y pueden variar según las condiciones del mercado. Todos los cálculos se hacen sobre el precio de lista, sin bonos ni descuentos. Rentas con incremento de 5% anual y plusvalía operativa de 10% a 13% anual compuesto sobre el valor a la entrega. Los rendimientos de bolsa, CETES y fractional turístico son escenarios supuestos con tasa constante, no promesas. Las rentas de esquemas de renta garantizada inician al liquidar el 100% de la propiedad. Aplican términos y condiciones de compra.</p>
     </div>
   </div>
 </section>
@@ -322,10 +319,10 @@ body.clientlink .link-hide{display:none!important}
     </div>
     <div class="card">
       <h3 class="eb">Escenarios</h3>
-      <p class="note">Base = cifras de la web (85% de ocupación, 7% de plusvalía). Con más o menos ocupación la renta sube o baja en proporción; la renta garantizada antes de la entrega no cambia.</p>
+      <p class="note">Plusvalía entre 10% y 13% anual (Conservador y Base 10%, Optimista 13%). Con más o menos ocupación la renta sube o baja en proporción; la renta garantizada antes de la entrega no cambia.</p>
       <div class="tw cfg"><table class="t" id="cfgSc"></table></div>
     </div>
-    <div class="card">
+    <div class="card" hidden>
       <h3 class="eb">Respaldo operativo (hoja ROI)</h3>
       <div class="tw cfg" id="cfgFund"></div>
     </div>
@@ -355,7 +352,8 @@ const DEFAULTS={
   baseOcc:85,
   adminPinHash:'14aec96b16f0343c54b94eadf67a95806ee719132be7531a99c1128f1a544a60',
   assumptions:{infl:5,horizon:10},
-  scenarios:[{id:'cons',name:'Conservador',occ:70,plus:5},{id:'base',name:'Base',occ:85,plus:7},{id:'opt',name:'Optimista',occ:95,plus:9}],
+  scenarios:[{id:'cons',name:'Conservador',occ:70,plus:10},{id:'base',name:'Base',occ:85,plus:10},{id:'opt',name:'Optimista',occ:95,plus:13}],
+  pagos:{umbralMensual:4},
   benchmarks:[
     {name:'S&P 500 / Bolsa',rate:10,nivel:'Riesgo alto',texto:'Alta volatilidad. No tienes un activo físico que respalde tu dinero si el mercado cae drásticamente.'},
     {name:'CETES / Banco',rate:11,nivel:'Riesgo de caída de tasas',texto:'El 11% no es sostenible a largo plazo. Tu capital no genera plusvalía y dependes de decisiones bancarias, sin respaldo de un activo físico.'},
@@ -410,10 +408,10 @@ let CFG=clone(DEFAULTS);
 let QUOTES=(()=>{try{return JSON.parse(lsGet(QSTORE))||[]}catch(e){return[]}})();
 
 /* ===================== Estado ===================== */
-const S={qty:{holding:1},dev:null,plan:'m14',apartado:0,eng:0,ce:0,ceFijo:0,n:14,bono:0,scenario:'base',occ:85,plus:7,...clone(CFG.assumptions)};
+const S={qty:{holding:1},dev:null,plan:'contado',apartado:0,eng:0,ce:0,ceFijo:0,n:14,bono:0,scenario:'base',occ:85,plus:7,...clone(CFG.assumptions)};
 function applyPlan(id){const p=CFG.plans.find(x=>x.id===id)||CFG.plans[0];Object.assign(S,{plan:p.id,apartado:p.apartado,eng:p.eng,ce:p.ce,ceFijo:p.ceFijo||0,n:p.n})}
 function applyScenario(id){const s=CFG.scenarios.find(x=>x.id===id)||CFG.scenarios[1]||CFG.scenarios[0];Object.assign(S,{scenario:s.id,occ:s.occ,plus:s.plus})}
-applyPlan('m14');applyScenario('base');
+applyPlan('contado');applyScenario('base');
 
 /* ===================== Utilidades ===================== */
 const $=id=>document.getElementById(id);
@@ -503,7 +501,7 @@ function renderProducts(){
   const ent=parseD(ps[0].entrega), inv=(CFG.inventory||{})[S.dev];
   const quedan=inv&&inv.total>0?Math.max(0,inv.total-(inv.vendidas||0)):null;
   $('prodList').innerHTML=`<div class="devhead"><span class="note">${esc(ps[0].tipo||'')}${ps[0].tipo?' · ':''}${monthsUntil(ent)>0?'Entrega '+MES[ent.getMonth()]+' '+ent.getFullYear():'Ya entregado · genera rentas'}</span>${quedan!==null?`<span class="stock">Quedan ${quedan} de ${inv.total}</span>`:''}</div>`+
-    ps.map(p=>{const q=S.qty[p.id]||0;return `<div class="prod"><div class="n"><b>${esc(p.name)}</b><small>${M(p.vp)} · renta ${M(p.vp*(p.rate??7.5)/100)}/año (${p.rate??7.5}%)</small></div>
+    ps.map(p=>{const q=S.qty[p.id]||0;return `<div class="prod"><div class="n"><b>${esc(p.name)}</b><small>${M(p.vp)} · ${p.rate??7.5}% anual<br>Renta: ${M(p.vp*(p.rate??7.5)/1200)}/mes · ${M(p.vp*(p.rate??7.5)/400)}/trim · ${M(p.vp*(p.rate??7.5)/100)}/año</small></div>
       <div class="qty"><button data-q="${esc(p.id)}" data-d="-1" aria-label="Quitar">−</button><span>${q}</span><button data-q="${esc(p.id)}" data-d="1" aria-label="Agregar">+</button></div></div>`}).join('');
   const sel=CFG.products.filter(p=>S.qty[p.id]);
   $('selLine').innerHTML=sel.length?'En la propuesta: '+sel.map(p=>`<b>${S.qty[p.id]>1?S.qty[p.id]+'× ':''}${esc(pname(p))}</b>`).join(', '):'';
@@ -535,11 +533,12 @@ function render(){
 
   const cli=$('cliente').value.trim();
   $('heroFor').textContent=cli?'Propuesta para '+cli:'Propuesta de inversión';
-  $('sumLine').textContent=R.units?selName(R.sel)+' · '+plan.name:'Elige un producto para comenzar';
+  $('sumLine').textContent=R.units?selName(R.sel):'Elige un producto para comenzar';
+  const FQ=frecuencia(R.sel);
   const iniTxt=R.inis.some(i=>i>1)?(R.inis.length>1?` · parte inicia al liquidar (año ${Math.max(...R.inis)})`:` · inicia al liquidar (año ${R.inis[0]})`):'';
   $('kpis').innerHTML=[
-    {l:'Inviertes',v:M(R.VP),s:(plan.tipo==='contado'?'De contado':`${per.length} pagos de ${M(pago)}`)+(R.bono?` · bono ${M(R.bono)}`:'')},
-    {l:'Renta anual inicial',v:M(R.rentaIni),s:R.units?`${P(R.rentaIni/R.list)} sobre tu inversión · ${M(R.rentaIni/12)} al mes${iniTxt}`:''},
+    {l:'Inviertes',v:M(R.VP),s:R.units?`${R.units} ${R.sel.every(esAccion)?(R.units===1?'acción':'acciones'):(R.units===1?'unidad':'unidades')}`+(R.bono?` · bono ${M(R.bono)}`:''):''},
+    {l:`Recibes cada ${FQ.freq==='mensual'?'mes':'trimestre'}`,v:M(FQ.freq==='mensual'?R.rentaIni/12:R.rentaIni/4),s:R.units?`${M(R.rentaIni)} al año · ${P(R.rentaIni/R.list)} sobre tu inversión${iniTxt}`:''},
     {l:`Retorno total a ${yrs} años`,v:M(R.total10),s:R.units?`Bodegas con plusvalía ${M(R.valor10)} + rentas ${M(R.rentas10)}`:'',hl:1},
   ].map(k=>`<div class="kpi ${k.hl?'hl':''}"><div class="l">${k.l}</div><div class="v">${k.v}</div><div class="s">${k.s}</div></div>`).join('');
 
@@ -565,7 +564,7 @@ function render(){
         scales:{x:{ticks:{color:tok('--muted')},grid:{display:false}},y:{beginAtZero:true,ticks:{color:tok('--muted'),callback:short,maxTicksLimit:5},grid:{color:tok('--line')},border:{display:false}}}}});
     }else{chart.data=data;chart.update()}
   }
-  renderBench(R);renderFund();renderCompare(R);renderScenarios();
+  renderBench(R);renderPayout(R);renderCompare(R);renderScenarios();
   const txt=resumen(R,plan,per,pago);
   const waNum=String((CFG.contacto&&CFG.contacto.whatsapp)||'').replace(/\D/g,''), isLink=document.body.classList.contains('clientlink');
   $('btnWa').href=(isLink&&waNum?'https://wa.me/'+waNum:'https://wa.me/')+'?text='+encodeURIComponent(txt||'');
@@ -609,6 +608,25 @@ function renderFund(){
       <p class="note" style="margin-top:10px">Bodegas reales en operación (${esc(c.area)}). La renta sube con la inflación cada año.</p>
     </div></div>`;
 }
+const esAccion=p=>String(p.tipo||'').startsWith('Fraccional');
+const rentaAnual=p=>p.vp*(p.rate??7.5)/100*S.occ/(CFG.baseOcc||85);
+function frecuencia(sel){
+  const um=Number((CFG.pagos||{}).umbralMensual)||4;
+  const acc=sel.filter(esAccion).reduce((a,p)=>a+S.qty[p.id],0);
+  return {acc,um,freq:acc>0&&acc<um?'trimestral':'mensual'};
+}
+function renderPayout(R){
+  if(!R.units){$('payout').innerHTML='<p class="note">Agrega al menos una unidad.</p>';return}
+  const {acc,um,freq}=frecuencia(R.sel), on=k=>k===freq?' style="color:var(--gain);font-weight:800"':'';
+  const row=(n,a,extra='')=>`<tr><td class="l">${n}${extra}</td><td${on('mensual')}>${M(a/12)}</td><td${on('trimestral')}>${M(a/4)}</td><td>${M(a)}</td></tr>`;
+  const tot=R.sel.reduce((a,p)=>a+rentaAnual(p)*S.qty[p.id],0);
+  const ini=R.sel.some(p=>inicio(p)>1)?`<p class="note">Bodegas y pisos tradicionales: la renta inicia al liquidar (año ${Math.max(...R.sel.map(inicio))}).</p>`:'';
+  $('payout').innerHTML=`<div class="tw"><table class="t"><thead><tr><th>Producto</th><th>Mensual</th><th>Trimestral</th><th>Anual</th></tr></thead><tbody>`+
+    R.sel.map(p=>row(`${S.qty[p.id]>1?S.qty[p.id]+'× ':''}${esc(pname(p))}`,rentaAnual(p)*S.qty[p.id],` <span class="note">${p.rate??7.5}%</span>`)).join('')+
+    (R.sel.length>1?`<tr class="tot"><td>Total</td><td${on('mensual')}>${M(tot/12)}</td><td${on('trimestral')}>${M(tot/4)}</td><td>${M(tot)}</td></tr>`:'')+
+    `</tbody></table></div><p style="margin:12px 0 0;font-weight:700">${acc?`Con ${acc} ${acc===1?'acción':'acciones'} recibes tu renta cada <span style="color:var(--gain)">${freq==='mensual'?'mes':'trimestre'}</span>.`:'Recibes tu renta cada <span style="color:var(--gain)">mes</span>.'}</p>
+    <p class="note" style="margin-top:4px">De 1 a ${um-1} acciones el pago es trimestral; desde ${um} acciones es mensual.</p>${ini}`;
+}
 function renderCompare(R){
   $('cmpNote').textContent=R.units?`Inversión ${M(R.VP)}. El rendimiento es el mismo en todos los planes; solo cambia cómo se paga.`:'Selecciona productos en el Cotizador.';
   $('cmpTable').innerHTML=`<thead><tr><th>Plan</th><th>Apartado</th><th>Enganche / liquidación</th><th>Pagos periódicos</th><th>Contra entrega</th><th>Total</th><th></th></tr></thead><tbody>`+
@@ -640,9 +658,9 @@ function resumen(R,plan,per,pago){
   const cli=$('cliente').value.trim(), ase=$('asesor').value.trim(), yrs=S.horizon;
   return [`*Propuesta de inversión MidStorage*${cli?' para '+cli:''}`,'',
     ...R.sel.map(p=>`• ${S.qty[p.id]>1?S.qty[p.id]+'× ':''}${pname(p)}`),'',
-    `💰 Inviertes: ${M(R.VP)}${plan.tipo==='contado'?' de contado':` (${plan.name}: ${per.length} pagos de ${M(pago)})`}`,
+    `💰 Inviertes: ${M(R.VP)}`,
     `🏗️ Valor a la entrega: ${M(R.VF)}`,
-    `📈 Renta anual inicial: ${M(R.rentaIni)} (${M(R.rentaIni/12)} al mes)`,
+    `📈 Rendimiento: ${M(R.rentaIni)} al año · ${frecuencia(R.sel).freq==='mensual'?M(R.rentaIni/12)+' cada mes':M(R.rentaIni/4)+' cada trimestre'}`,
     `🏦 Retorno total proyectado a ${yrs} años: ${M(R.total10)}`,
     '','_Proyecciones estimadas sobre precio de lista; pueden variar según el mercado._',ase?`Asesor: ${ase}`:''].join('\n').trim();
 }
@@ -687,11 +705,12 @@ async function makePDF(){
   let y=100;
   d.setTextColor(...ink);d.setFont('helvetica','bold');d.setFontSize(20);d.text(cli?'Propuesta para '+cli:'Propuesta de inversión',X,y);
   y+=18;d.setFont('helvetica','normal');d.setFontSize(10);d.setTextColor(...mut);
-  const selTxt=d.splitTextToSize(selName(R.sel)+' · '+plan.name,CW);
+  const selTxt=d.splitTextToSize(selName(R.sel),CW);
   d.text(selTxt,X,y);y+=(selTxt.length-1)*12;
   y+=16;d.setFillColor(...ink);d.roundedRect(X,y,CW,78,8,8,'F');
-  const K=[['INVIERTES',M(R.VP),plan.tipo==='contado'?'De contado':`${per.length} pagos de ${M(pago)}`],
-           ['RENTA ANUAL INICIAL',M(R.rentaIni),`${M(R.rentaIni/12)} al mes`],
+  const FQ=frecuencia(R.sel);
+  const K=[['INVIERTES',M(R.VP),`${R.units} ${R.sel.every(esAccion)?(R.units===1?'acción':'acciones'):(R.units===1?'unidad':'unidades')}`],
+           [FQ.freq==='mensual'?'RECIBES CADA MES':'RECIBES CADA TRIMESTRE',M(FQ.freq==='mensual'?R.rentaIni/12:R.rentaIni/4),`${M(R.rentaIni)} al año`],
            [`RETORNO TOTAL A ${yrs} AÑOS`,M(R.total10),`Plusvalía ${short(R.valor10)} + rentas ${short(R.rentas10)}`]];
   K.forEach((k,i)=>{const kx=X+16+i*(CW/3);
     d.setFont('helvetica','bold');d.setFontSize(8);d.setTextColor(154,158,166);d.text(k[0],kx,y+22);
@@ -716,14 +735,15 @@ async function makePDF(){
     d.setFillColor(...(b.me?gold:[185,181,172]));d.roundedRect(X+150,y,Math.max(8,(CW-250)*b.v/bmx),9,4,4,'F');
     d.setTextColor(...(b.me?gain:ink));d.text(M(b.v),X+CW,y+8,{align:'right'});y+=18});
   y+=16;
-  d.setFont('helvetica','bold');d.setFontSize(10);d.setTextColor(...gold);d.text('CÓMO PAGAS',X,y);y+=16;
-  const lines=sch.filter(x=>x.k!=='per').map(x=>[x.c,fdate(x.d),M(x.m)]);
-  if(per.length){const ci=lines.findIndex(l=>l[0]==='Contra entrega');
-    lines.splice(ci<0?lines.length:ci,0,[`${per.length} ${plan.tipo==='trimestral'?'pagos trimestrales':'mensualidades'} de ${M(pago)}`,`${fdate(per[0].d)} a ${fdate(per[per.length-1].d)}`,M(pago*per.length)])}
-  d.setFontSize(9);
-  lines.forEach(l=>{d.setFont('helvetica','normal');d.setTextColor(...ink);d.text(l[0],X,y);d.setTextColor(...mut);d.text(l[1],X+290,y);d.setTextColor(...ink);d.setFont('helvetica','bold');d.text(l[2],X+CW,y,{align:'right'});
-    d.setDrawColor(232,230,225);d.line(X,y+6,X+CW,y+6);y+=18});
-  d.setFont('helvetica','bold');d.text('Total',X,y);d.text(M(sch.reduce((a,x)=>a+x.m,0)),X+CW,y,{align:'right'});
+  d.setFont('helvetica','bold');d.setFontSize(10);d.setTextColor(...gold);d.text('ASÍ RECIBES TU RENDIMIENTO',X,y);y+=16;
+  d.setFontSize(8);d.setTextColor(...mut);d.text('MENSUAL',X+300,y,{align:'right'});d.text('TRIMESTRAL',X+400,y,{align:'right'});d.text('ANUAL',X+CW,y,{align:'right'});y+=14;
+  const prow=(n,a,b)=>{d.setFont('helvetica',b?'bold':'normal');d.setFontSize(9);d.setTextColor(...ink);d.text(d.splitTextToSize(n,240)[0],X,y);
+    [[a/12,'mensual',300],[a/4,'trimestral',400]].forEach(([v,k,dx])=>{d.setTextColor(...(FQ.freq===k?gain:ink));d.setFont('helvetica',FQ.freq===k||b?'bold':'normal');d.text(M(v),X+dx,y,{align:'right'})});
+    d.setTextColor(...ink);d.text(M(a),X+CW,y,{align:'right'});d.setDrawColor(232,230,225);d.line(X,y+6,X+CW,y+6);y+=18};
+  R.sel.forEach(p=>prow(`${S.qty[p.id]>1?S.qty[p.id]+'× ':''}${pname(p)} (${p.rate??7.5}%)`,rentaAnual(p)*S.qty[p.id]));
+  if(R.sel.length>1)prow('Total',R.rentaIni,true);
+  d.setFont('helvetica','bold');d.setFontSize(9);d.setTextColor(...gain);
+  d.text(FQ.acc?`Con ${FQ.acc} ${FQ.acc===1?'acción':'acciones'} recibes tu renta cada ${FQ.freq==='mensual'?'mes':'trimestre'}.`:'Recibes tu renta cada mes.',X,y+2);
   d.setFont('helvetica','normal');d.setFontSize(8);d.setTextColor(...mut);
   d.text(d.splitTextToSize(`Proyecciones estimadas que pueden variar según las condiciones del mercado. Cálculos sobre precio de lista, sin bonos ni descuentos. Rentas con incremento de ${S.infl}% anual y plusvalía operativa de ${S.plus}% anual compuesto sobre el valor a la entrega (ocupación ${S.occ}%). Los rendimientos de bolsa, CETES y fractional turístico son escenarios supuestos con tasa constante, no promesas. Las rentas de esquemas de renta garantizada inician al liquidar el 100% de la propiedad. Aplican términos y condiciones de compra.${ase?'   Asesor: '+ase:''}`,CW),X,744);
   const name=`Propuesta MidStorage${cli?' - '+cli:''}.pdf`.replace(/[\\/:*?"<>|]/g,'');
@@ -767,6 +787,7 @@ function renderCfg(){
     CFG.benchmarks.map((b,i)=>`<tr><td>${inp(`data-b="${i}" data-k="name"`,b.name,'text')}</td><td>${inp(`data-b="${i}" data-k="rate" step="0.1"`,b.rate)}</td><td>${inp(`data-b="${i}" data-k="nivel"`,b.nivel||'','text')}</td><td>${inp(`data-b="${i}" data-k="texto" style="min-width:320px"`,b.texto||'','text')}</td></tr>`).join('')+'</tbody></table></div>';
   const lab={infl:'Incremento anual de rentas %',horizon:'Años de proyección'};
   $('cfgAssump').innerHTML=Object.keys(lab).map(k=>`<div><label class="f">${lab[k]}</label>${inp(`data-a="${k}" step="0.5"`,CFG.assumptions[k])}</div>`).join('')+
+    `<div><label class="f">Pago mensual desde (acciones)</label>${inp('data-pg="umbralMensual" min="1"',(CFG.pagos||{}).umbralMensual||4)}</div>`+
     `<div><label class="f">WhatsApp de ventas (botón del link de clientes)</label>${inp('data-c="whatsapp" placeholder="52 999 000 0000"',(CFG.contacto||{}).whatsapp||'','text')}</div>`;
   $('v-cfg').querySelectorAll('input,button.del,#addProd,#cfgReset').forEach(el=>{el.disabled=!CAN_ADMIN});
   $('cfgImportL').hidden=!CAN_ADMIN;
@@ -797,12 +818,12 @@ document.addEventListener('click',e=>{
 const NUM={apartado:'apartado',eng:'eng',meses:'n',bono:'bono',infl:'infl',horizon:'horizon',plus:'plus',occ:'occ'};
 Object.entries(NUM).forEach(([id,k])=>$(id).addEventListener('input',e=>{S[k]=Number(e.target.value)||0;if(k==='occ'||k==='plus')S.scenario=null;render()}));
 $('ce').addEventListener('input',e=>{S.ce=Number(e.target.value);S.ceFijo=0;render()});
-$('fund').addEventListener('input',e=>{if(e.target.id!=='occ2')return;S.occ=Number(e.target.value);S.scenario=null;$('occ').value=S.occ;render();const n=$('occ2');if(n)n.focus()});
+
 $('cliente').addEventListener('input',render);
 $('asesor').addEventListener('input',()=>{lsSet('ms_asesor',$('asesor').value);render()});
 $('asesor').value=lsGet('ms_asesor')||'';
 $('monto').addEventListener('input',renderSug);
-$('btnDetail').onclick=()=>{const d=$('detail');d.hidden=!d.hidden;$('btnDetail').textContent=d.hidden?'Ver detalle: proyección y calendario de pagos ▾':'Ocultar detalle ▴'};
+$('btnDetail').onclick=()=>{const d=$('detail');d.hidden=!d.hidden;$('btnDetail').textContent=d.hidden?'Ver detalle: proyección año por año ▾':'Ocultar detalle ▴'};
 function copyText(t,msg){
   const fallback=()=>{const ta=document.createElement('textarea');ta.value=t;document.body.appendChild(ta);ta.select();try{document.execCommand('copy');toast(msg)}catch(_){toast(t)}ta.remove()};
   try{navigator.clipboard.writeText(t).then(()=>toast(msg),fallback)}catch(_){fallback()}
@@ -831,6 +852,7 @@ $('v-cfg').addEventListener('change',e=>{
   else if(d.sci!==undefined){CFG.scenarios[+d.sci][d.k]=num;if(S.scenario)applyScenario(S.scenario)}
   else if(d.fk!==undefined){const f=CFG.fundamentals[d.fk];if(d.fl!==undefined)f.lineas[+d.fl][d.k]=num;else f[d.k]=num}
   else if(d.b!==undefined)CFG.benchmarks[+d.b][d.k||'rate']=num;
+  else if(d.pg){CFG.pagos={...(CFG.pagos||{}),[d.pg]:num}}
   else if(d.c){CFG.contacto={...(CFG.contacto||{}),[d.c]:num}}
   else if(d.a){CFG.assumptions[d.a]=num;S[d.a]=num}
   else return;
@@ -847,7 +869,7 @@ let resetArm=0;
 $('cfgReset').onclick=()=>{
   if(!CAN_ADMIN)return;
   if(Date.now()-resetArm>4000){resetArm=Date.now();$('cfgReset').textContent='Toca otra vez para confirmar';setTimeout(()=>{$('cfgReset').textContent='Restaurar valores del Excel'},4000);return}
-  resetArm=0;$('cfgReset').textContent='Restaurar valores del Excel';CFG=merge({...clone(DEFAULTS),adminPinHash:CFG.adminPinHash});saveCfg();Object.assign(S,clone(CFG.assumptions));applyScenario('base');applyPlan('m14');refreshAll();toast('Valores del Excel restaurados');
+  resetArm=0;$('cfgReset').textContent='Restaurar valores del Excel';CFG=merge({...clone(DEFAULTS),adminPinHash:CFG.adminPinHash});saveCfg();Object.assign(S,clone(CFG.assumptions));applyScenario('base');applyPlan('contado');refreshAll();toast('Valores base restaurados');
 };
 
 $('pinForm').addEventListener('submit',async e=>{

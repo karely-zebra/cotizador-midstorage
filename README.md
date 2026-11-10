@@ -1,13 +1,13 @@
 # Cotizador MidStorage
 
-Cotizador de inversión para asesores y clientes de MidStorage. Usa los mismos cálculos que el constructor de portafolio de midstorage.com: 10 años, precio de lista, rentas +5% anual y plusvalía de 7% anual compuesta sobre el valor a la entrega.
+Cotizador de inversión para asesores y clientes de MidStorage. Proyección a 10 años sobre precio de lista: rentas +5% anual y plusvalía de 10% a 13% anual compuesta sobre el valor a la entrega. El pago de rendimientos es trimestral de 1 a 3 acciones y mensual desde 4.
 
 ## Dos accesos
 
 | Para | Link | Qué ve |
 |---|---|---|
-| **Asesores** | `https://karely-zebra.github.io/cotizador-midstorage/` | Cotizador completo: planes de pago, comparar planes, catálogo, historial, escenarios y botón **Link para clientes** |
-| **Clientes** | `https://karely-zebra.github.io/cotizador-midstorage/#clientes` | Vista simple: elige productos y plan, ve sus 3 números, la gráfica, la comparación contra CETES/Bolsa y descarga su PDF |
+| **Asesores** | `https://karely-zebra.github.io/cotizador-midstorage/` | Cotizador completo: catálogo, historial, escenarios, rendimiento mensual/trimestral/anual y botón **Link para clientes** |
+| **Clientes** | `https://karely-zebra.github.io/cotizador-midstorage/#clientes` | Vista simple: elige productos, ve sus 3 números, la gráfica, la comparación contra CETES/Bolsa y descarga su PDF |
 
 **Administrador:** en *Configuración* se escribe el código de administrador para editar precios, tasas, inventario y el WhatsApp de ventas.
 
