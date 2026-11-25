@@ -26,7 +26,9 @@
     }
   ],
   "pagos": {
-    "umbralMensual": 4
+    "umbralMensual": 4,
+    "umbralTasa": 4,
+    "tasaVolumen": 9
   },
   "benchmarks": [
     {
@@ -58,7 +60,7 @@
   "inventory": {
     "Avenida Internacional": {
       "total": 85,
-      "vendidas": 59
+      "vendidas": 74
     }
   },
   "products": [
@@ -90,8 +92,8 @@
       "tipo": "Tradicional",
       "inicioRenta": 3,
       "name": "Bodega A · 170 m²",
-      "vp": 2890000,
-      "vf": 3912615,
+      "vp": 3522400,
+      "vf": 4768788,
       "rate": 7,
       "entrega": "2026-12-30"
     },
@@ -101,10 +103,11 @@
       "tipo": "Tradicional",
       "inicioRenta": 3,
       "name": "Bodega B · 200 m²",
-      "vp": 3500000,
-      "vf": 4738462,
+      "vp": 4144000,
+      "vf": 5610338,
       "rate": 7,
-      "entrega": "2026-12-30"
+      "entrega": "2026-12-30",
+      "oculto": true
     },
     {
       "id": "avC",
@@ -112,10 +115,11 @@
       "tipo": "Tradicional",
       "inicioRenta": 3,
       "name": "Bodega C · 520 m²",
-      "vp": 9152000,
-      "vf": 12390400,
+      "vp": 9672000,
+      "vf": 13094400,
       "rate": 7,
-      "entrega": "2027-12-30"
+      "entrega": "2027-12-30",
+      "oculto": true
     },
     {
       "id": "prA",

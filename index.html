@@ -189,6 +189,9 @@ body.clientlink .link-hide{display:none!important}
         <div class="chips" id="devChips"></div>
         <div id="prodList"></div>
         <div class="note" id="selLine" style="margin-top:8px"></div>
+        <div style="margin-top:12px"><label class="f" for="bono">Bono / descuento ($)</label>
+          <input type="number" id="bono" min="0" step="5000" inputmode="numeric" placeholder="0" aria-label="Bono o descuento en pesos">
+          <div class="note" id="bonoNote" style="margin-top:4px"></div></div>
         <details class="more"><summary>¿Trae un monto definido?</summary>
           <input type="number" id="monto" placeholder="Ej. 2000000" min="0" step="50000" style="margin-top:8px" aria-label="Monto a invertir">
           <div class="sug" id="sug"></div>
@@ -199,15 +202,13 @@ body.clientlink .link-hide{display:none!important}
         <div class="chips" id="planChips"></div>
         <div class="slider" id="s-meses"><div class="top"><span id="l-meses">Mensualidades</span><output id="o-meses"></output></div>
           <input type="range" id="meses" min="1" max="48" step="1" aria-label="Número de pagos"></div>
-        <details class="more adv-only"><summary>Ajustar enganche, apartado y bono</summary>
+        <details class="more adv-only"><summary>Ajustar enganche y apartado</summary>
           <div class="slider"><div class="top"><span>Apartado</span><output id="o-apartado"></output></div>
             <input type="range" id="apartado" min="0" max="100000" step="1000" aria-label="Apartado"></div>
           <div class="slider" id="s-eng"><div class="top"><span>Enganche</span><output id="o-eng"></output></div>
             <input type="range" id="eng" min="0" max="100" step="1" aria-label="Enganche"></div>
           <div class="slider" id="s-ce"><div class="top"><span>Contra entrega</span><output id="o-ce"></output></div>
             <input type="range" id="ce" min="0" max="70" step="1" aria-label="Contra entrega"></div>
-          <div class="slider"><div class="top"><span>Bono / descuento</span><output id="o-bono"></output></div>
-            <input type="range" id="bono" min="0" max="200000" step="5000" aria-label="Bono"></div>
         </details>
       </div>
       <details class="card soft more internal" style="margin-top:0"><summary style="text-transform:uppercase;letter-spacing:.08em">Supuestos (solo asesor)</summary>
@@ -258,7 +259,7 @@ body.clientlink .link-hide{display:none!important}
         <div id="t-proj"><div class="tw"><table class="t" id="projTable"></table></div></div>
         <div id="t-pay" hidden><div class="tw"><table class="t" id="payTable"></table></div></div>
       </div>
-      <p class="note">Las cifras son proyecciones estimadas y pueden variar según las condiciones del mercado. Todos los cálculos se hacen sobre el precio de lista, sin bonos ni descuentos. Rentas con incremento de 5% anual y plusvalía operativa de 10% a 13% anual compuesto sobre el valor a la entrega. Los rendimientos de bolsa, CETES y fractional turístico son escenarios supuestos con tasa constante, no promesas. Las rentas de esquemas de renta garantizada inician al liquidar el 100% de la propiedad. Aplican términos y condiciones de compra.</p>
+      <p class="note">Las cifras son proyecciones estimadas y pueden variar según las condiciones del mercado. El rendimiento se calcula sobre el precio con descuento (lo que realmente pagas); el valor a la entrega y la plusvalía no cambian con el descuento. Rentas con incremento de 5% anual y plusvalía operativa de 10% a 13% anual compuesto sobre el valor a la entrega. Los rendimientos de bolsa, CETES y fractional turístico son escenarios supuestos con tasa constante, no promesas. Las rentas de esquemas de renta garantizada inician al liquidar el 100% de la propiedad. Aplican términos y condiciones de compra.</p>
     </div>
   </div>
 </section>
@@ -364,20 +365,20 @@ const DEFAULTS={
   adminPinHash:'14aec96b16f0343c54b94eadf67a95806ee719132be7531a99c1128f1a544a60',
   assumptions:{infl:5,horizon:10},
   scenarios:[{id:'cons',name:'Conservador',occ:70,plus:10},{id:'base',name:'Base',occ:85,plus:10},{id:'opt',name:'Optimista',occ:95,plus:13}],
-  pagos:{umbralMensual:4},
+  pagos:{umbralMensual:4,umbralTasa:4,tasaVolumen:9},
   benchmarks:[
     {name:'S&P 500 / Bolsa',rate:10,nivel:'Riesgo alto',texto:'Alta volatilidad. No tienes un activo físico que respalde tu dinero si el mercado cae drásticamente.'},
     {name:'CETES / Banco',rate:11,nivel:'Riesgo de caída de tasas',texto:'El 11% no es sostenible a largo plazo. Tu capital no genera plusvalía y dependes de decisiones bancarias, sin respaldo de un activo físico.'},
     {name:'Fractional turístico',rate:8,nivel:'Riesgo operativo',texto:'Rendimiento volátil sujeto a turismo, competencia de Airbnb y alto desgaste estético. Midstorage es industria B2B de largo plazo.'}],
   contacto:{whatsapp:''},
   ownRisk:{nivel:'Bajo riesgo',texto:'Tu capital está respaldado por ladrillos industriales (bodegas) con ocupación empresarial de largo plazo (B2B).'},
-  inventory:{'Avenida Internacional':{total:85,vendidas:59}},
+  inventory:{'Avenida Internacional':{total:85,vendidas:74}},
   products:[
     {id:'holding',dev:'Holding',tipo:'Fraccional B2B',inicioRenta:1,name:'Fracción',vp:600000,vf:850000,rate:7.5,entrega:'2017-12-30'},
     {id:'one',dev:'One Storage',tipo:'Fraccional B2B',inicioRenta:1,name:'Fracción',vp:475000,vf:655000,rate:7.5,entrega:'2027-12-30'},
-    {id:'avA',dev:'Avenida Internacional',tipo:'Tradicional',inicioRenta:3,name:'Bodega A · 170 m²',vp:2890000,vf:vfx(2890000,F_AV),rate:7,entrega:'2026-12-30'},
-    {id:'avB',dev:'Avenida Internacional',tipo:'Tradicional',inicioRenta:3,name:'Bodega B · 200 m²',vp:3500000,vf:vfx(3500000,F_AV),rate:7,entrega:'2026-12-30'},
-    {id:'avC',dev:'Avenida Internacional',tipo:'Tradicional',inicioRenta:3,name:'Bodega C · 520 m²',vp:9152000,vf:vfx(9152000,F_AV),rate:7,entrega:'2027-12-30'},
+    {id:'avA',dev:'Avenida Internacional',tipo:'Tradicional',inicioRenta:3,name:'Bodega A · 170 m²',vp:3522400,vf:vfx(3522400,F_AV),rate:7,entrega:'2026-12-30'},
+    {id:'avB',dev:'Avenida Internacional',tipo:'Tradicional',inicioRenta:3,name:'Bodega B · 200 m²',vp:4144000,vf:vfx(4144000,F_AV),rate:7,entrega:'2026-12-30',oculto:true},
+    {id:'avC',dev:'Avenida Internacional',tipo:'Tradicional',inicioRenta:3,name:'Bodega C · 520 m²',vp:9672000,vf:vfx(9672000,F_AV),rate:7,entrega:'2027-12-30',oculto:true},
     {id:'prA',dev:'Progreso Hub',tipo:'Tradicional',inicioRenta:3,name:'Bodega A · 474.26 m²',vp:10773453,vf:vfx(10773453,F_AV),rate:7,entrega:'2029-09-30'},
     {id:'prB',dev:'Progreso Hub',tipo:'Tradicional',inicioRenta:3,name:'Bodega B · 185.89 m²',vp:3404000,vf:vfx(3404000,F_AV),rate:7,entrega:'2029-09-30'},
     {id:'prC',dev:'Progreso Hub',tipo:'Tradicional',inicioRenta:3,name:'Bodega C · 182-188 m²',vp:3800000,vf:vfx(3800000,F_AV),rate:7,entrega:'2029-09-30'},
@@ -438,24 +439,32 @@ const day30=(y,m)=>new Date(y,m,Math.min(30,new Date(y,m+1,0).getDate()));
 const monthsUntil=d=>{const t=new Date();return Math.max(0,(d.getFullYear()-t.getFullYear())*12+d.getMonth()-t.getMonth()-(d.getDate()<t.getDate()?1:0))};
 const short=v=>v>=1e6?'$'+(v/1e6).toFixed(1)+'M':v>=1e3?'$'+(v/1e3).toFixed(0)+'k':'$'+Math.round(v);
 let toastT;function toast(t){const e=$('toast');e.textContent=t;e.classList.add('on');clearTimeout(toastT);toastT=setTimeout(()=>e.classList.remove('on'),2200)}
-const devs=()=>[...new Set(CFG.products.map(p=>p.dev))];
+const visibles=()=>CFG.products.filter(p=>!p.oculto);
+const devs=()=>[...new Set(visibles().map(p=>p.dev))];
+const selActual=()=>visibles().filter(p=>(S.qty[p.id]||0)>0);
+/* Tasa única: fracciones (Holding + One Storage juntas) rinden tasaVolumen desde umbralTasa acciones; si no, su tasa propia */
+const tasaCfg=()=>{const pg=CFG.pagos||{};return {um:Number(pg.umbralTasa)||4,tv:Number(pg.tasaVolumen)||9}};
+const accionesEn=sel=>sel.filter(esAccion).reduce((a,p)=>a+(S.qty[p.id]||0),0);
+function tasa(p,sel=selActual()){const base=Number(p.rate??7.5);if(!esAccion(p))return base;const {um,tv}=tasaCfg();return accionesEn(sel)>=um?tv:base}
+const tasaNota=p=>{if(!esAccion(p))return '';const {um,tv}=tasaCfg();return `${tv}% desde ${um} acciones`};
 const pname=p=>p.dev+' · '+p.name;
 const inicio=p=>Math.max(1,Number(p.inicioRenta)||(String(p.tipo||'').startsWith('Fraccional')?1:3));
 const selName=sel=>sel.map(p=>(S.qty[p.id]>1?S.qty[p.id]+'× ':'')+pname(p)).join(' + ');
 
 /* ===================== Cálculo (réplica del Excel) ===================== */
 function compute(){
-  const sel=CFG.products.filter(p=>(S.qty[p.id]||0)>0);
+  const sel=selActual();
   const units=sel.reduce((a,p)=>a+S.qty[p.id],0);
   const list=sel.reduce((a,p)=>a+p.vp*S.qty[p.id],0);       // precio de lista (la web calcula sin bonos)
   const bono=units>0?Math.min(S.bono,list):0;
   const VP=list-bono;                                         // lo que paga el cliente
+  const fD=list>0?VP/list:1;                                  // descuento proporcional: el rendimiento se calcula sobre VP
   const VF=sel.reduce((a,p)=>a+p.vf*S.qty[p.id],0);          // valor a la entrega
   const pr=S.plus/100, inf=S.infl/100, occF=S.occ/(CFG.baseOcc||85), H=S.horizon;
   const plan=CFG.plans.find(x=>x.id===S.plan)||CFG.plans[0];
   const entrega=sel.length?new Date(Math.max(...sel.map(p=>parseD(p.entrega)))):null;
   const sch=schedule(VP,plan,entrega);
-  const rentaDe=p=>p.vp*(p.rate??7.5)/100*occF;
+  const rentaDe=p=>p.vp*fD*tasa(p,sel)/100*occF;
   const y0=new Date().getFullYear(), rows=[];
   let acc=0;
   for(let y=1;y<=H;y++){
@@ -468,8 +477,8 @@ function compute(){
   const last=rows[rows.length-1]||{valor:VF,acc:0,patrimonio:VF};
   const rentaIni=sel.reduce((a,p)=>a+rentaDe(p)*S.qty[p.id],0);
   const inis=[...new Set(sel.map(inicio))];
-  return {sel,units,list,bono,VP,VF,plan,sch,entrega,rows,rentaIni,inis,
-    valor10:last.valor,rentas10:last.acc,total10:last.patrimonio,ganancia:last.patrimonio-list};
+  return {sel,units,list,bono,VP,fD,VF,plan,sch,entrega,rows,rentaIni,inis,
+    valor10:last.valor,rentas10:last.acc,total10:last.patrimonio,ganancia:last.patrimonio-VP};
 }
 function schedule(VP,plan,entrega,st=S){
   const t=new Date();t.setHours(0,0,0,0);
@@ -505,24 +514,24 @@ function fundCalc(f,occ){
 function renderProducts(){
   const D=devs();
   if(!D.includes(S.dev)){const f=CFG.products.find(p=>S.qty[p.id]);S.dev=f?f.dev:D[0]}
-  const cnt=dv=>CFG.products.filter(p=>p.dev===dv).reduce((a,p)=>a+(S.qty[p.id]||0),0);
+  const cnt=dv=>visibles().filter(p=>p.dev===dv).reduce((a,p)=>a+(S.qty[p.id]||0),0);
   $('devChips').innerHTML=D.map(dv=>`<button class="chip ${S.dev===dv?'on':''}" data-dev="${esc(dv)}">${esc(dv)}${cnt(dv)?`<span class="dot">${cnt(dv)}</span>`:''}</button>`).join('');
-  const ps=CFG.products.filter(p=>p.dev===S.dev);
+  const ps=visibles().filter(p=>p.dev===S.dev);
   if(!ps.length){$('prodList').innerHTML='';return}
-  const FR=frecuencia(CFG.products.filter(x=>S.qty[x.id])).freq;
+  const SEL=selActual(), FR=frecuencia(SEL).freq;
   const ent=parseD(ps[0].entrega), inv=(CFG.inventory||{})[S.dev];
   const quedan=inv&&inv.total>0?Math.max(0,inv.total-(inv.vendidas||0)):null;
   $('prodList').innerHTML=`<div class="devhead"><span class="note">${esc(ps[0].tipo||'')}${ps[0].tipo?' · ':''}${monthsUntil(ent)>0?'Entrega '+MES[ent.getMonth()]+' '+ent.getFullYear():'Ya entregado · genera rentas'}</span>${quedan!==null?`<span class="stock">Quedan ${quedan} de ${inv.total}</span>`:''}</div>`+
-    ps.map(p=>{const q=S.qty[p.id]||0;return `<div class="prod"><div class="n"><b>${esc(p.name)}</b><small>${M(p.vp)} · ${p.rate??7.5}% anual<br>Renta: ${FR==='mensual'?M(p.vp*(p.rate??7.5)/1200)+'/mes':M(p.vp*(p.rate??7.5)/400)+'/trimestre'} · ${M(p.vp*(p.rate??7.5)/100)}/año</small></div>
+    ps.map(p=>{const q=S.qty[p.id]||0,t=tasa(p,SEL),tn=t<tasaCfg().tv?tasaNota(p):'';return `<div class="prod"><div class="n"><b>${esc(p.name)}</b><small>${M(p.vp)} · ${t}% anual${tn?` <span style="color:var(--gain);font-weight:600">· ${tn}</span>`:''}<br>Renta: ${FR==='mensual'?M(p.vp*t/1200)+'/mes':M(p.vp*t/400)+'/trimestre'} · ${M(p.vp*t/100)}/año</small></div>
       <div class="qty"><button data-q="${esc(p.id)}" data-d="-1" aria-label="Quitar">−</button><span>${q}</span><button data-q="${esc(p.id)}" data-d="1" aria-label="Agregar">+</button></div></div>`}).join('');
-  const sel=CFG.products.filter(p=>S.qty[p.id]);
+  const sel=SEL;
   $('selLine').innerHTML=sel.length?'En la propuesta: '+sel.map(p=>`<b>${S.qty[p.id]>1?S.qty[p.id]+'× ':''}${esc(pname(p))}</b>`).join(', '):'';
 }
 function renderPlans(){$('planChips').innerHTML=CFG.plans.map(p=>`<button class="chip ${S.plan===p.id?'on':''}" data-plan="${esc(p.id)}">${esc(p.name)}</button>`).join('')}
 function renderScenarios(){$('scChips').innerHTML=CFG.scenarios.map(s=>`<button class="chip ${S.scenario===s.id?'on':''}" data-sc="${esc(s.id)}">${esc(s.name)}</button>`).join('')}
 function syncInputs(){
   const plan=CFG.plans.find(x=>x.id===S.plan)||CFG.plans[0];
-  for(const [id,k] of Object.entries({apartado:'apartado',eng:'eng',ce:'ce',meses:'n',bono:'bono',occ:'occ',plus:'plus',infl:'infl',horizon:'horizon'}))$(id).value=S[k];
+  for(const [id,k] of Object.entries({apartado:'apartado',eng:'eng',ce:'ce',meses:'n',bono:'bono',occ:'occ',plus:'plus',infl:'infl',horizon:'horizon'}))$(id).value=(k==='bono'&&!S.bono)?'':S[k];
   const fin=plan.tipo!=='contado';
   $('s-eng').hidden=$('s-ce').hidden=$('s-meses').hidden=!fin;
   $('l-meses').textContent=plan.tipo==='trimestral'?'Pagos trimestrales':'Mensualidades';
@@ -539,7 +548,8 @@ function render(){
   $('o-apartado').textContent=M(S.apartado);
   $('o-eng').textContent=`${S.eng}% · ${M(R.VP*S.eng/100)}`;
   $('o-ce').textContent=S.ceFijo>0?`${M(S.ceFijo)} (fijo)`:`${S.ce}% · ${M(ceAmt)}`;
-  $('o-meses').textContent=S.n;$('o-bono').textContent=M(S.bono);
+  $('o-meses').textContent=S.n;
+  $('bonoNote').textContent=R.bono?`Precio de lista ${M(R.list)} − ${M(R.bono)} = pagas ${M(R.VP)}. El rendimiento se calcula sobre ${M(R.VP)}.`:'';
   $('o-occ').textContent=S.occ+'%';$('o-plus').textContent=S.plus.toFixed(1)+'%';
   $('o-infl').textContent=S.infl.toFixed(1)+'%';
 
@@ -549,26 +559,28 @@ function render(){
   const FQ=frecuencia(R.sel);
   const iniTxt=R.inis.some(i=>i>1)?(R.inis.length>1?` · parte inicia al liquidar (año ${Math.max(...R.inis)})`:` · inicia al liquidar (año ${R.inis[0]})`):'';
   $('kpis').innerHTML=[
-    {l:'Inviertes',v:M(R.VP),s:R.units?`${R.units} ${R.sel.every(esAccion)?(R.units===1?'acción':'acciones'):(R.units===1?'unidad':'unidades')}`+(R.bono?` · bono ${M(R.bono)}`:''):''},
-    {l:`Recibes cada ${FQ.freq==='mensual'?'mes':'trimestre'}`,v:M(FQ.freq==='mensual'?R.rentaIni/12:R.rentaIni/4),s:R.units?`${M(R.rentaIni)} al año · ${P(R.rentaIni/R.list)} sobre tu inversión${iniTxt}`:''},
+    {l:'Inviertes',v:M(R.VP),s:R.units?`${R.units} ${R.sel.every(esAccion)?(R.units===1?'acción':'acciones'):(R.units===1?'unidad':'unidades')}`+(R.bono?` · con descuento de ${M(R.bono)}`:''):''},
+    {l:`Recibes cada ${FQ.freq==='mensual'?'mes':'trimestre'}`,v:M(FQ.freq==='mensual'?R.rentaIni/12:R.rentaIni/4),s:R.units?`${M(R.rentaIni)} al año · ${P(R.VP?R.rentaIni/R.VP:0)} sobre tu inversión${iniTxt}`:''},
     {l:`Retorno total a ${yrs} años`,v:M(R.total10),s:R.units?`Bodegas con plusvalía ${M(R.valor10)} + rentas ${M(R.rentas10)}`:'',hl:1},
   ].map(k=>`<div class="kpi ${k.hl?'hl':''}"><div class="l">${k.l}</div><div class="v">${k.v}</div><div class="s">${k.s}</div></div>`).join('');
 
   $('projTable').innerHTML=`<thead><tr><th>Año</th><th>Renta del año</th><th>Valor del inmueble</th><th>Rentas acumuladas</th><th>Total</th></tr></thead><tbody>
-    <tr><td>Hoy <span class="note">(precio de lista)</span></td><td>—</td><td>${M(R.list)}</td><td>—</td><td>${M(R.list)}</td></tr>
+    <tr><td>Hoy <span class="note">(precio de lista)</span></td><td>—</td><td>${M(R.list)}</td><td>—</td><td>${M(R.list)}</td></tr>`+
+    (R.bono?`<tr><td>Descuento / bono</td><td>—</td><td>−${M(R.bono)}</td><td>—</td><td>−${M(R.bono)}</td></tr>
+    <tr><td>Tu inversión <span class="note">(con descuento)</span></td><td>—</td><td>${M(R.VP)}</td><td>—</td><td>${M(R.VP)}</td></tr>`:'')+`
     <tr><td>A la entrega</td><td>—</td><td>${M(R.VF)}</td><td>—</td><td>${M(R.VF)}</td></tr>`+
     R.rows.map(x=>`<tr><td>${x.label} <span class="note">(${x.anio})</span></td><td>${x.renta?M(x.renta):'—'}</td><td>${M(x.valor)}</td><td>${M(x.acc)}</td><td>${M(x.patrimonio)}</td></tr>`).join('')+
     `<tr class="tot"><td>A ${yrs} años</td><td></td><td>${M(R.valor10)}</td><td>${M(R.rentas10)}</td><td>${M(R.total10)}</td></tr>
-    <tr><td colspan="5" class="note" style="text-align:left;white-space:normal">Ganancia sobre tu inversión: ${M(R.ganancia)} (${R.list?(R.total10/R.list).toFixed(1):0}× tu capital). Rentas +${S.infl}% anual; plusvalía ${S.plus}% anual compuesta sobre el valor a la entrega.</td></tr></tbody>`;
+    <tr><td colspan="5" class="note" style="text-align:left;white-space:normal">Ganancia sobre tu inversión: ${M(R.ganancia)} (${R.VP?(R.total10/R.VP).toFixed(1):0}× tu capital). Rentas +${S.infl}% anual; plusvalía ${S.plus}% anual compuesta sobre el valor a la entrega.</td></tr></tbody>`;
   const tot=sch.reduce((a,x)=>a+x.m,0);
   $('payTable').innerHTML=`<thead><tr><th>Concepto</th><th>Fecha</th><th>Monto</th></tr></thead><tbody>`+
     sch.map(x=>`<tr><td>${x.c}</td><td>${fdate(x.d)}</td><td>${M(x.m)}</td></tr>`).join('')+`<tr class="tot"><td>Total</td><td></td><td>${M(tot)}</td></tr></tbody>`;
 
   const css=getComputedStyle(document.documentElement), tok=n=>css.getPropertyValue(n).trim();
   const labels=['Hoy',...R.rows.map(x=>String(x.anio))];
-  const vals=[R.list,...R.rows.map(x=>Math.round(x.patrimonio))];
+  const vals=[R.VP,...R.rows.map(x=>Math.round(x.patrimonio))];
   const data={labels,datasets:[{label:'Total',data:vals,borderRadius:6,backgroundColor:vals.map((_,i)=>i===vals.length-1?tok('--gold'):tok('--bar'))}]};
-  $('chartTitle').textContent=R.units?`Así crece tu patrimonio: de ${short(R.list)} a ${short(R.total10)}`:'Así crece tu patrimonio';
+  $('chartTitle').textContent=R.units?`Así crece tu patrimonio: de ${short(R.VP)} a ${short(R.total10)}`:'Así crece tu patrimonio';
   if(window.Chart){
     if(!chart){
       chart=new Chart($('chart'),{type:'bar',data,options:{maintainAspectRatio:false,animation:{duration:300},
@@ -586,7 +598,7 @@ function render(){
 function renderBench(R){
   const yrs=S.horizon;
   $('benchTitle').textContent=`¿Y si pones ese mismo dinero en otro lado? Monto final a ${yrs} años`;
-  const B=CFG.benchmarks.map(b=>({n:b.name,r:b.rate,nivel:b.nivel,texto:b.texto,v:R.list*Math.pow(1+b.rate/100,yrs)})).sort((a,b)=>b.v-a.v);
+  const B=CFG.benchmarks.map(b=>({n:b.name,r:b.rate,nivel:b.nivel,texto:b.texto,v:R.VP*Math.pow(1+b.rate/100,yrs)})).sort((a,b)=>b.v-a.v);
   const own=CFG.ownRisk||DEFAULTS.ownRisk;
   const all=[{n:'Portafolio MidStorage',v:R.total10,me:1,nivel:own.nivel,texto:own.texto},...B], mx=Math.max(...all.map(x=>x.v),1), best=B[0];
   if(!R.units){$('bench').innerHTML='<p class="note">Agrega al menos una unidad para ver la comparativa.</p>';return}
@@ -621,7 +633,7 @@ function renderFund(){
     </div></div>`;
 }
 const esAccion=p=>String(p.tipo||'').startsWith('Fraccional');
-const rentaAnual=p=>p.vp*(p.rate??7.5)/100*S.occ/(CFG.baseOcc||85);
+const rentaAnual=(p,R)=>p.vp*(R?R.fD:1)*tasa(p,R?R.sel:undefined)/100*S.occ/(CFG.baseOcc||85);
 function frecuencia(sel){
   const um=Number((CFG.pagos||{}).umbralMensual)||4;
   const acc=sel.filter(esAccion).reduce((a,p)=>a+S.qty[p.id],0);
@@ -632,13 +644,13 @@ function renderPayout(R){
   const {acc,um,freq}=frecuencia(R.sel), mens=freq==='mensual';
   const lbl=mens?'Mensual':'Trimestral', per=a=>mens?a/12:a/4;
   const row=(n,a,cls='')=>`<tr class="${cls}"><td class="l">${n}</td><td style="color:var(--gain);font-weight:800">${M(per(a))}</td><td>${M(a)}</td></tr>`;
-  const tot=R.sel.reduce((a,p)=>a+rentaAnual(p)*S.qty[p.id],0);
+  const tot=R.sel.reduce((a,p)=>a+rentaAnual(p,R)*S.qty[p.id],0);
   const ini=R.sel.some(p=>inicio(p)>1)?`<p class="note">Bodegas y pisos tradicionales: la renta inicia al liquidar (año ${Math.max(...R.sel.map(inicio))}).</p>`:'';
   $('payout').innerHTML=`<div class="tw"><table class="t"><thead><tr><th>Producto</th><th>Pago ${lbl.toLowerCase()}</th><th>Anual</th></tr></thead><tbody>`+
-    R.sel.map(p=>row(`${S.qty[p.id]>1?S.qty[p.id]+'× ':''}${esc(pname(p))} <span class="note">${p.rate??7.5}%</span>`,rentaAnual(p)*S.qty[p.id])).join('')+
+    R.sel.map(p=>row(`${S.qty[p.id]>1?S.qty[p.id]+'× ':''}${esc(pname(p))} <span class="note">${tasa(p,R.sel)}%</span>`,rentaAnual(p,R)*S.qty[p.id])).join('')+
     (R.sel.length>1?row('Total',tot,'tot'):'')+
     `</tbody></table></div><p style="margin:12px 0 0;font-weight:700">${acc?`Con ${acc} ${acc===1?'acción':'acciones'} recibes tu renta cada <span style="color:var(--gain)">${mens?'mes':'trimestre'}</span>.`:'Recibes tu renta cada <span style="color:var(--gain)">mes</span>.'}</p>
-    <p class="note" style="margin-top:4px">${mens?(acc?`Desde ${um} acciones el pago es mensual.`:''):`Con ${um} acciones o más el pago pasa a ser mensual.`}</p>${ini}`;
+    <p class="note" style="margin-top:4px">${mens?(acc?`Desde ${um} acciones el pago es mensual.`:''):`Con ${um} acciones o más el pago pasa a ser mensual.`}${acc?(acc>=tasaCfg().um?` Con ${acc} acciones todas rinden ${tasaCfg().tv}%.`:` Desde ${tasaCfg().um} acciones todas rinden ${tasaCfg().tv}%.`):''}</p>${R.bono?`<p class="note">Rendimiento calculado sobre tu inversión con descuento (${M(R.VP)}).</p>`:''}${ini}`;
 }
 function renderCompare(R){
   $('cmpNote').textContent=R.units?`Inversión ${M(R.VP)}. El rendimiento es el mismo en todos los planes; solo cambia cómo se paga.`:'Selecciona productos en el Cotizador.';
@@ -650,16 +662,16 @@ function renderCompare(R){
   }).join('')+'</tbody>';
 }
 function renderCatalog(){
-  $('catGrid').innerHTML=CFG.products.map(p=>{const e=parseD(p.entrega),mr=monthsUntil(e),inv=(CFG.inventory||{})[p.dev];return `<div class="card">
+  $('catGrid').innerHTML=visibles().map(p=>{const t=tasa(p),tn=tasaNota(p);const e=parseD(p.entrega),mr=monthsUntil(e),inv=(CFG.inventory||{})[p.dev];return `<div class="card">
     <div class="note">${esc(p.dev)}${p.tipo?' · '+esc(p.tipo):''}</div><h4>${esc(p.name)}</h4>
     <dl><dt>Precio hoy</dt><dd>${M(p.vp)}</dd><dt>Valor a la entrega</dt><dd>${M(p.vf)}</dd>
-    <dt>Plusvalía</dt><dd style="color:var(--gain)">+${P((p.vf-p.vp)/p.vp)}</dd><dt>Renta/año</dt><dd>${M(p.vp*(p.rate??7.5)/100)} · ${p.rate??7.5}%</dd>
+    <dt>Plusvalía</dt><dd style="color:var(--gain)">+${P((p.vf-p.vp)/p.vp)}</dd><dt>Renta/año</dt><dd>${M(p.vp*t/100)} · ${t}%${tn?`<br><span class="note">${tn}</span>`:''}</dd>
     <dt>Entrega</dt><dd>${mr>0?MES[e.getMonth()]+' '+e.getFullYear()+' · '+mr+' meses':'Entregado'}</dd>
     ${inv&&inv.total>0?`<dt>Disponibles</dt><dd>${Math.max(0,inv.total-(inv.vendidas||0))} de ${inv.total}</dd>`:''}</dl></div>`}).join('');
 }
 function renderSug(){
   const m=Number($('monto').value)||0;if(m<=0){$('sug').innerHTML='';return}
-  const opts=devs().map(dv=>{const ps=CFG.products.filter(p=>p.dev===dv&&p.vp<=m).sort((a,b)=>b.vp-a.vp);if(!ps.length)return null;const p=ps[0],q=Math.floor(m/p.vp);return {p,q,rest:m-q*p.vp}}).filter(Boolean);
+  const opts=devs().map(dv=>{const ps=visibles().filter(p=>p.dev===dv&&p.vp<=m).sort((a,b)=>b.vp-a.vp);if(!ps.length)return null;const p=ps[0],q=Math.floor(m/p.vp);return {p,q,rest:m-q*p.vp}}).filter(Boolean);
   $('sug').innerHTML=opts.length?opts.map(o=>`<button data-sugid="${esc(o.p.id)}" data-sugq="${o.q}">${o.q}× ${esc(pname(o.p))} · ${M(o.q*o.p.vp)} <span class="note">(sobran ${M(o.rest)})</span></button>`).join('')
     :'<span class="note">El monto no alcanza ningún producto de contado; prueba un plan a meses.</span>';
 }
@@ -672,10 +684,11 @@ function resumen(R,plan,per,pago){
   return [`*Propuesta de inversión MidStorage*${cli?' para '+cli:''}`,'',
     ...R.sel.map(p=>`• ${S.qty[p.id]>1?S.qty[p.id]+'× ':''}${pname(p)}`),'',
     `💰 Inviertes: ${M(R.VP)}`,
+    ...(R.bono?[`🏷️ Precio de lista ${M(R.list)} · descuento aplicado −${M(R.bono)}`]:[]),
     `🏗️ Valor a la entrega: ${M(R.VF)}`,
     `📈 Rendimiento: ${M(R.rentaIni)} al año · ${frecuencia(R.sel).freq==='mensual'?M(R.rentaIni/12)+' cada mes':M(R.rentaIni/4)+' cada trimestre'}`,
     `🏦 Retorno total proyectado a ${yrs} años: ${M(R.total10)}`,
-    '','_Proyecciones estimadas sobre precio de lista; pueden variar según el mercado._',ase?`Asesor: ${ase}`:''].join('\n').trim();
+    '',R.bono?'_Rendimiento calculado sobre el precio con descuento. Proyecciones estimadas; pueden variar según el mercado._':'_Proyecciones estimadas sobre precio de lista; pueden variar según el mercado._',ase?`Asesor: ${ase}`:''].join('\n').trim();
 }
 let lastSavedKey='';
 async function saveQuote(canal){
@@ -720,9 +733,10 @@ async function makePDF(){
   y+=18;d.setFont('helvetica','normal');d.setFontSize(10);d.setTextColor(...mut);
   const selTxt=d.splitTextToSize(selName(R.sel),CW);
   d.text(selTxt,X,y);y+=(selTxt.length-1)*12;
+  if(R.bono){y+=13;d.setTextColor(...gain);d.setFont('helvetica','bold');d.text(`Precio de lista ${M(R.list)}  ·  Descuento aplicado -${M(R.bono)}  ·  Inviertes ${M(R.VP)}`,X,y);d.setFont('helvetica','normal')}
   y+=16;d.setFillColor(...ink);d.roundedRect(X,y,CW,78,8,8,'F');
   const FQ=frecuencia(R.sel);
-  const K=[['INVIERTES',M(R.VP),`${R.units} ${R.sel.every(esAccion)?(R.units===1?'acción':'acciones'):(R.units===1?'unidad':'unidades')}`],
+  const K=[['INVIERTES',M(R.VP),`${R.units} ${R.sel.every(esAccion)?(R.units===1?'acción':'acciones'):(R.units===1?'unidad':'unidades')}`+(R.bono?` · desc. ${short(R.bono)}`:'')],
            [FQ.freq==='mensual'?'RECIBES CADA MES':'RECIBES CADA TRIMESTRE',M(FQ.freq==='mensual'?R.rentaIni/12:R.rentaIni/4),`${M(R.rentaIni)} al año`],
            [`RETORNO TOTAL A ${yrs} AÑOS`,M(R.total10),`Plusvalía ${short(R.valor10)} + rentas ${short(R.rentas10)}`]];
   K.forEach((k,i)=>{const kx=X+16+i*(CW/3);
@@ -732,7 +746,7 @@ async function makePDF(){
   y+=104;
   d.setFont('helvetica','bold');d.setFontSize(10);d.setTextColor(...gold);d.text('ASÍ CRECE TU PATRIMONIO',X,y);
   y+=12;
-  const rows=[{l:'Hoy',v:R.list},...R.rows.map(x=>({l:String(x.anio),v:x.patrimonio}))];
+  const rows=[{l:'Hoy',v:R.VP},...R.rows.map(x=>({l:String(x.anio),v:x.patrimonio}))];
   const ch=120, mx=Math.max(...rows.map(r=>r.v)), bw=CW/rows.length;
   rows.forEach((r,i)=>{const h=r.v/mx*ch;d.setFillColor(...(i===rows.length-1?gold:[214,211,204]));d.rect(X+i*bw+3,y+ch-h,bw-6,h,'F');
     d.setFontSize(7);d.setTextColor(...mut);d.setFont('helvetica','normal');d.text(r.l,X+i*bw+bw/2,y+ch+10,{align:'center'})});
@@ -741,7 +755,7 @@ async function makePDF(){
   d.text(M(R.total10),X+CW-bw/2,y+ch-rows[rows.length-1].v/mx*ch-4,{align:'center'});
   y+=ch+36;
   d.setFontSize(10);d.setTextColor(...gold);d.text(`MONTO FINAL A ${yrs} AÑOS VS. OTRAS INVERSIONES`,X,y);y+=14;
-  const B=[{n:'MidStorage',v:R.total10,me:1},...CFG.benchmarks.map(b=>({n:b.name+' '+b.rate+'%',v:R.list*Math.pow(1+b.rate/100,yrs)})).sort((a,b)=>b.v-a.v)];
+  const B=[{n:'MidStorage',v:R.total10,me:1},...CFG.benchmarks.map(b=>({n:b.name+' '+b.rate+'%',v:R.VP*Math.pow(1+b.rate/100,yrs)})).sort((a,b)=>b.v-a.v)];
   const bmx=Math.max(...B.map(b=>b.v),1);
   B.forEach(b=>{d.setFont('helvetica',b.me?'bold':'normal');d.setFontSize(9);d.setTextColor(...ink);d.text(b.n,X,y+8);
     d.setFillColor(243,242,239);d.roundedRect(X+150,y,CW-250,9,4,4,'F');
@@ -754,12 +768,12 @@ async function makePDF(){
   const prow=(n,a,b)=>{d.setFont('helvetica',b?'bold':'normal');d.setFontSize(9);d.setTextColor(...ink);d.text(d.splitTextToSize(n,300)[0],X,y);
     d.setTextColor(...gain);d.setFont('helvetica','bold');d.text(M(mensP?a/12:a/4),X+400,y,{align:'right'});
     d.setTextColor(...ink);d.setFont('helvetica',b?'bold':'normal');d.text(M(a),X+CW,y,{align:'right'});d.setDrawColor(232,230,225);d.line(X,y+6,X+CW,y+6);y+=18};
-  R.sel.forEach(p=>prow(`${S.qty[p.id]>1?S.qty[p.id]+'× ':''}${pname(p)} (${p.rate??7.5}%)`,rentaAnual(p)*S.qty[p.id]));
+  R.sel.forEach(p=>prow(`${S.qty[p.id]>1?S.qty[p.id]+'× ':''}${pname(p)} (${tasa(p,R.sel)}%)`,rentaAnual(p,R)*S.qty[p.id]));
   if(R.sel.length>1)prow('Total',R.rentaIni,true);
   d.setFont('helvetica','bold');d.setFontSize(9);d.setTextColor(...gain);
   d.text(FQ.acc?`Con ${FQ.acc} ${FQ.acc===1?'acción':'acciones'} recibes tu renta cada ${FQ.freq==='mensual'?'mes':'trimestre'}.`:'Recibes tu renta cada mes.',X,y+2);
   d.setFont('helvetica','normal');d.setFontSize(8);d.setTextColor(...mut);
-  d.text(d.splitTextToSize(`Proyecciones estimadas que pueden variar según las condiciones del mercado. Cálculos sobre precio de lista, sin bonos ni descuentos. Rentas con incremento de ${S.infl}% anual y plusvalía operativa de ${S.plus}% anual compuesto sobre el valor a la entrega (ocupación ${S.occ}%). Los rendimientos de bolsa, CETES y fractional turístico son escenarios supuestos con tasa constante, no promesas. Las rentas de esquemas de renta garantizada inician al liquidar el 100% de la propiedad. Aplican términos y condiciones de compra.${ase?'   Asesor: '+ase:''}`,CW),X,744);
+  d.text(d.splitTextToSize(`Proyecciones estimadas que pueden variar según las condiciones del mercado. El rendimiento se calcula sobre el precio con descuento (lo que realmente pagas); el valor a la entrega y la plusvalía no cambian con el descuento. Rentas con incremento de ${S.infl}% anual y plusvalía operativa de ${S.plus}% anual compuesto sobre el valor a la entrega (ocupación ${S.occ}%). Los rendimientos de bolsa, CETES y fractional turístico son escenarios supuestos con tasa constante, no promesas. Las rentas de esquemas de renta garantizada inician al liquidar el 100% de la propiedad. Aplican términos y condiciones de compra.${ase?'   Asesor: '+ase:''}`,CW),X,744);
   const name=`Propuesta MidStorage${cli?' - '+cli:''}.pdf`.replace(/[\\/:*?"<>|]/g,'');
   if(DL){try{await DL.save({filename:name,data:d.output('blob')});saveQuote('PDF')}catch(e){if(!e||e.code!=='declined')toast('No se pudo descargar el PDF')}}
   else{d.save(name);saveQuote('PDF')}
@@ -781,8 +795,8 @@ function renderCfg(){
   $('cfgBanner').textContent=!local?(CAN_ADMIN?'Eres administrador: los cambios se aplican al instante para todos los asesores.':'Eres asesor: puedes cotizar, pero solo los administradores (Editores) cambian precios.')
     :(CAN_ADMIN?(lsGet(STORE)?'Modo administrador. Tienes cambios guardados solo en este navegador. Para que todos los asesores los vean, descarga config.json y súbelo al repositorio reemplazando el actual.':'Modo administrador. Edita lo que necesites; luego descarga config.json y súbelo al repositorio para que todos lo vean.')
     :'Precios publicados para todo el equipo.');
-  $('cfgProducts').innerHTML=`<thead><tr><th>Desarrollo</th><th>Tipo</th><th>Producto</th><th>Precio hoy</th><th>Valor a entrega</th><th>Renta %</th><th>Renta inicia (año)</th><th>Entrega</th><th></th></tr></thead><tbody>`+
-    CFG.products.map((p,i)=>`<tr><td>${inp(`data-p="${i}" data-k="dev"`,p.dev,'text')}</td><td>${inp(`data-p="${i}" data-k="tipo"`,p.tipo||'','text')}</td><td>${inp(`data-p="${i}" data-k="name"`,p.name,'text')}</td><td>${inp(`data-p="${i}" data-k="vp"`,p.vp)}</td><td>${inp(`data-p="${i}" data-k="vf"`,p.vf)}</td><td>${inp(`data-p="${i}" data-k="rate" step="0.1"`,p.rate??7.5)}</td><td>${inp(`data-p="${i}" data-k="inicioRenta" min="1"`,inicio(p))}</td><td>${inp(`data-p="${i}" data-k="entrega"`,p.entrega,'date')}</td><td><button class="del" data-delp="${i}" aria-label="Eliminar">✕</button></td></tr>`).join('')+'</tbody>';
+  $('cfgProducts').innerHTML=`<thead><tr><th>Desarrollo</th><th>Tipo</th><th>Producto</th><th>Precio hoy</th><th>Valor a entrega</th><th>Renta %</th><th>Renta inicia (año)</th><th>Entrega</th><th>Oculto</th><th></th></tr></thead><tbody>`+
+    CFG.products.map((p,i)=>`<tr><td>${inp(`data-p="${i}" data-k="dev"`,p.dev,'text')}</td><td>${inp(`data-p="${i}" data-k="tipo"`,p.tipo||'','text')}</td><td>${inp(`data-p="${i}" data-k="name"`,p.name,'text')}</td><td>${inp(`data-p="${i}" data-k="vp"`,p.vp)}</td><td>${inp(`data-p="${i}" data-k="vf"`,p.vf)}</td><td>${inp(`data-p="${i}" data-k="rate" step="0.1"`,p.rate??7.5)}</td><td>${inp(`data-p="${i}" data-k="inicioRenta" min="1"`,inicio(p))}</td><td>${inp(`data-p="${i}" data-k="entrega"`,p.entrega,'date')}</td><td style="text-align:center"><input type="checkbox" data-p="${i}" data-k="oculto" ${p.oculto?'checked':''} title="No se muestra a asesores ni clientes" aria-label="Ocultar producto" style="min-width:0;width:auto"></td><td><button class="del" data-delp="${i}" aria-label="Eliminar">✕</button></td></tr>`).join('')+'</tbody>';
   CFG.inventory=CFG.inventory||{};
   $('cfgInv').innerHTML=`<thead><tr><th>Desarrollo</th><th>Total</th><th>Vendidas</th><th>Disponibles</th></tr></thead><tbody>`+
     devs().map(dv=>{const v=CFG.inventory[dv]||{total:0,vendidas:0};return `<tr><td>${esc(dv)}</td><td>${inp(`data-inv="${esc(dv)}" data-k="total"`,v.total)}</td><td>${inp(`data-inv="${esc(dv)}" data-k="vendidas"`,v.vendidas)}</td><td>${v.total?Math.max(0,v.total-v.vendidas):'—'}</td></tr>`}).join('')+'</tbody>';
@@ -802,6 +816,8 @@ function renderCfg(){
   const lab={infl:'Incremento anual de rentas %',horizon:'Años de proyección'};
   $('cfgAssump').innerHTML=Object.keys(lab).map(k=>`<div><label class="f">${lab[k]}</label>${inp(`data-a="${k}" step="0.5"`,CFG.assumptions[k])}</div>`).join('')+
     `<div><label class="f">Pago mensual desde (acciones)</label>${inp('data-pg="umbralMensual" min="1"',(CFG.pagos||{}).umbralMensual||4)}</div>`+
+    `<div><label class="f">Rendimiento por volumen desde (acciones)</label>${inp('data-pg="umbralTasa" min="1"',tasaCfg().um)}</div>`+
+    `<div><label class="f">Rendimiento por volumen %</label>${inp('data-pg="tasaVolumen" step="0.1"',tasaCfg().tv)}</div>`+
     `<div><label class="f">WhatsApp de ventas (botón del link de clientes)</label>${inp('data-c="whatsapp" placeholder="52 999 000 0000"',(CFG.contacto||{}).whatsapp||'','text')}</div>`;
   $('v-cfg').querySelectorAll('input,button.del,#addProd,#cfgReset').forEach(el=>{el.disabled=!CAN_ADMIN});
   $('cfgImportL').hidden=!CAN_ADMIN;
@@ -859,7 +875,7 @@ $('hisMine').onclick=()=>{hisMine=!hisMine;$('hisMine').classList.toggle('on',hi
 $('v-cfg').addEventListener('change',e=>{
   if(!CAN_ADMIN)return;
   const t=e.target,d=t.dataset;if(t.id==='cfgImport')return;
-  const num=t.type==='number'?Number(t.value):t.value;
+  const num=t.type==='checkbox'?t.checked:t.type==='number'?Number(t.value):t.value;
   if(d.p!==undefined)CFG.products[+d.p][d.k]=num;
   else if(d.inv!==undefined){CFG.inventory[d.inv]=CFG.inventory[d.inv]||{total:0,vendidas:0};CFG.inventory[d.inv][d.k]=num}
   else if(d.pl!==undefined){CFG.plans[+d.pl][d.k]=num;applyPlan(S.plan)}
